@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+<%- include('./partials/css/dashboard.css.ejs')%>
+
+</head>
+<body>
+    <header>   
+        <nav>
+
+            <logo>sunaulo aawaaz</logo>
+            <ul>
+                <li><a href="#"><i class="fa-solid fa-user"></i> Log out</a></li>
+            </ul>
+
+        </nav>
+    </header>
+    <main>
+        <div class="mainLeft">
+            <div class="filter">
+                <h1>Search Station</h1>
+                <label for="musicLength">Min length: <input id="minValue" value="0"></input>minutes</label>
+                <input type="range" name="" id="musicLength" min="0" max="900" value="0" onchange="updateMinLength()" >
+                <div class="categoryList">
+                    
+                    <div for="" class="category">Love</div>
+                    <div for="" class="category">adventure</div>
+                    <div for="" class="category">work</div>
+                    <div for="" class="category">life</div>
+                    <div for="" class="category">sad</div>
+                    <div for="" class="category">technology</div>
+                    <div for="" class="category">journey</div>
+                    <div for="" class="category">spritual</div>
+                    <div for="" class="category">motivation</div>
+                    <div for="" class="category">story</div>
+                    
+                </div>
+                <search>
+                    <input type="text" placeholder="enter here to search...">
+                    <button><i class="fa-solid fa-magnifying-glass "></i></button>
+                </search>
+                
+            </div>
+            <div class="ads-section">
+                <label for="" style="color:red;">Advertisement</label>
+            </div>
+
+
+            <div class="playStation">
+                
+                <audio src="" id="audio" controls controlsList="nodownload"></audio>
+                <div class="playStationMiddle">
+                <div class="skip">
+                    <div id="skipBackward" onclick="goBackward()"><i class="fa-solid fa-backward"></i></div>
+                    <div id="skipForward" onclick="goforward()"><i class="fa-solid fa-forward"></i></div>
+                </div>
+                
+                </div>
+                <div class="playStationBottom">
+                    <h1 class="musicHead">No music to play.....</h1>
+                    <p class="musicDescription">No music to play.....</p>
+                </div>
+            </div>            
+        </div>
+        <div class="mainLeft2"></div>
+        <div class="mainRight">
+            <!-- here will be the musiic -->
+           
+        </div>
+
+        <div class="createSection">
+            <input type="text" name="title" id="title" placeholder="enter your title of sound...">
+            <div id="editor"></div>
+            <!-- <textarea name="" id="editor" cols="30" rows="10" placeholder="description area"> </textarea> -->
+            <input type="file" name="" id="musicFile" accept="audio/*" onchange="changeSrcOfAudio()">
+            <input type="text" id="tags" placeholder="tags">
+            <button class="createButton" onclick="askToCreateMusic()">Create new audio...</button>
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.2.1/classic/ckeditor.js"></script>
+    <script>
+      AOS.init();
+let editor;
+
+ClassicEditor
+    .create( document.querySelector( '#editor' ) )
+    .then( newEditor => {
+        editor = newEditor;
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
+
+
+        const audio=document.getElementById("audio")
+        function updateMinLength(){
+            minValue.value=musicLength.value;
+        }
+
+        let categories=Array.from(document.getElementsByClassName("category"))
+        categories.forEach((e)=>{
+            e.addEventListener("click",(d)=>{
+                e.classList.toggle("blue")
+            })
+        })
+
+        function goBackward(){
+            audio.currentTime-=3
+        }
+        
+        
+        function goforward(){
+            audio.currentTime+=3
+        }
+
+      
+        function changeSrcOfAudio(){
+          audio.src=URL.createObjectURL(musicFile.files[0]);
+        }
+
+
+        const musicTitleElement=document.getElementById("title");
+        const tagElement=document.getElementById("tags")
+        const musicHead=document.getElementsByClassName("musicHead")[0]
+        const musicDescription=document.getElementsByClassName("musicDescription")[0]
+        
+        
+        ///ask to create music or not
+        function askToCreateMusic(){
+          if(confirm("Are you sure want to create music")){createNewMusic()}
+        }
+        
+        //create
+        async function createNewMusic(){
+          
+          const musicFile=document.getElementById("musicFile")
+          const data = new FormData();
+          data.append("music",musicFile.files[0]);
+          data.append("title",musicTitleElement.value);
+          data.append("description",editor.getData());
+          data.append("category",tagElement.value);
+          data.append("length",audio.duration)
+          const response=await fetch('http://localhost:3000/api/v1/music/create',{
+            method:"POST",
+            body:data
+          })
+          const res=await response.json()
+          console.log(res)
+        }
+        
+        //load music
+        let page=1;
+        async function addMore(){
+          
+          const data=await fetch("http://localhost:3000/api/v1/music/all?page="+page)
+          const res= await data.json()
+          if(res.success){
+            insertMusic(res.musics);
+            page++;
+          }else{
+            alert("no more data to load....")
+            return
+          }   
+        }
+
+        addMore();
+        
+        // loaded music insertion
+        function insertMusic(musics){
+          const mainRight=document.getElementsByClassName("mainRight")[0]
+          let direction="fade-up";
+          
+          musics.forEach((music)=>{
+     
+              mainRight.innerHTML+=`<div class="music" data-aos="${direction}">
+                <div class="musicBottom"><button onclick="changeSrcOfMusicPlayer({path:'${music.path}',title:'${music.title}',description:'${music.description}'})">Play</button><p>${music.title}</p></div>
+                <button id="delete">delete</button>
+                <button id="edit">edit</button>
+            </div>`
+            
+            
+          
+          })
+        }
+
+
+        function changeSrcOfMusicPlayer(data){
+          audio.src=`http://localhost:3000/${data.path}`
+          audio.play()
+          musicHead.innerHTML=data.title
+          musicDescription.innerHTML=data.description
+        }
+        window.addEventListener("scroll",(element)=>{
+          let target = document.body.offsetHeight-window.innerHeight + 20
+          let movingPoint=window.scrollY
+          if(movingPoint===target){
+            addMore(page)  
+          };
+        })
+    </script>
+</body>
+</html>

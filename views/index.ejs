@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header>   
+        <nav>
+
+            <logo>sunaulo aawaaz</logo>
+            <ul>
+                <li><a href="#"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#"><i class="fa-solid fa-star"></i> Fav</a></li>
+                <li><a href="#"><i class="fa-solid fa-question"></i> About us</a></li>
+                <li><a href="#"><i class="fa-solid fa-user"></i> Login</a></li>
+            </ul>
+
+        </nav>
+    </header>
+    <main>
+        <div class="mainLeft">
+            <div class="filter">
+                <h1>Search Station</h1>
+                <label for="musicLength">Min length: <input id="minValue" value="0"></input>minutes</label>
+                <input type="range" name="" id="musicLength" min="0" max="900" value="0" onchange="updateMinLength()" >
+                <div class="categoryList">
+                    
+                    <div for="" class="category">Love</div>
+                    <div for="" class="category">adventure</div>
+                    <div for="" class="category">work</div>
+                    <div for="" class="category">life</div>
+                    <div for="" class="category">sad</div>
+                    <div for="" class="category">technology</div>
+                    <div for="" class="category">journey</div>
+                    <div for="" class="category">spritual</div>
+                    <div for="" class="category">motivation</div>
+                    <div for="" class="category">story</div>
+                    
+                </div>
+                <search>
+                    <input type="text" placeholder="enter here to search...">
+                    <button><i class="fa-solid fa-magnifying-glass "></i></button>
+                </search>
+                
+            </div>
+            <div class="ads-section">
+                <label for="" style="color:red;">Advertisement</label>
+            </div>
+
+
+            <div class="playStation">
+                
+                <audio src="./Passenger___Let_Her_Go_(Official_Video)(128k).m4a" id="audio" controls controlsList="nodownload"></audio>
+                <div class="playStationMiddle">
+                <div class="skip">
+                    <div id="skipBackward" onclick="goBackward()"><i class="fa-solid fa-backward"></i></div>
+                    <div id="skipForward" onclick="goforward()"><i class="fa-solid fa-forward"></i></div>
+                </div>
+                
+                </div>
+                <div class="playStationBottom">
+                    <p class="title">No music to play.....</p>
+                </div>
+            </div>            
+        </div>
+        <div class="mainLeft2"></div>
+        <div class="mainRight">
+            <div class="music">
+                <div class="musicTop">
+                    <p class="description">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nobis voluptatum sed esse nisi quidem, rerum tempore cum quod. Animi nostrum excepturi officiis.
+                    </p>
+                </div>
+                <div class="musicBottom"><button>Play</button><musicTitle>this is love of music</musicTitle></div>
+            </div>
+            <div class="music">
+                <div class="musicTop">
+                    <p class="description">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nobis voluptatum sed esse nisi quidem, rerum tempore cum quod. Animi nostrum excepturi officiis.
+                    </p>
+                </div>
+                <div class="musicBottom"><button>Play</button></div>
+            </div>
+            <div class="music">
+                <div class="musicTop">
+                    <p class="description">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nobis voluptatum sed esse nisi quidem, rerum tempore cum quod. Animi nostrum excepturi officiis.
+                    </p>
+                </div>
+                <div class="musicBottom"><button>Play</button></div>
+            </div>
+            <div class="music">
+                <div class="musicTop">
+                    <p class="description">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nobis voluptatum sed esse nisi quidem, rerum tempore cum quod. Animi nostrum excepturi officiis.
+                    </p>
+                </div>
+                <div class="musicBottom"><button>Play</button></div>
+            </div>
+            <div class="music">
+                <div class="musicTop">
+                    <p class="description">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nobis voluptatum sed esse nisi quidem, rerum tempore cum quod. Animi nostrum excepturi officiis.
+                    </p>
+                </div>
+                <div class="musicBottom"><button>Play</button></div>
+            </div>
+            <div class="music">
+                <div class="musicTop">
+                </div>
+                <div class="musicBottom"><button>Play</button></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+    <script>
+        const audio=document.getElementById("audio")
+        function updateMinLength(){
+            minValue.value=musicLength.value;
+        }
+
+        let categories=Array.from(document.getElementsByClassName("category"))
+        categories.forEach((e)=>{
+            e.addEventListener("click",(d)=>{
+                e.classList.toggle("blue")
+            })
+        })
+
+        function goBackward(){
+            audio.currentTime-=3
+        }
+        
+        
+        function goforward(){
+            
+            audio.currentTime+=3
+        }
+    </script>
+</body>
+</html>
